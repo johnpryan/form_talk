@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/climb.dart';
+import '../widgets/date_form_field.dart';
 
 class EditClimbPage extends StatefulWidget {
   final Climb climb;
@@ -53,6 +54,15 @@ class _EditClimbPageState extends State<EditClimbPage> {
                   initialValue: _draft.name,
                   onChanged: (newValue) {
                     _draft.name = newValue;
+                  },
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                DateFormField(
+                  initialValue: _draft.date,
+                  onChanged: (newDate) {
+                    _draft.date = newDate;
                   },
                 ),
               ],
