@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/climb.dart';
 import '../models/grade.dart';
 import '../widgets/climb_tile.dart';
+import 'edit_climb_page.dart';
 
 class AllClimbsPage extends StatefulWidget {
   @override
@@ -35,5 +36,27 @@ class _AllClimbsPageState extends State<AllClimbsPage> {
     );
   }
 
-  Future _editClimb([Climb climb]) async {}
+  Future _editClimb([Climb climb]) async {
+    var newClimb = await Navigator.of(context).push<Climb>(
+      MaterialPageRoute(
+        builder: (context) {
+          return EditClimbPage(climb: climb ?? Climb.empty());
+        },
+      ),
+    );
+
+    if (newClimb == null) {
+      return;
+    }
+
+    if (climb == null) {
+      setState(() {
+        climbs.add(newClimb);
+      });
+    } else {
+      setState(() {
+        newClimb.copyTo(climb);
+      });
+    }
+  }
 }
