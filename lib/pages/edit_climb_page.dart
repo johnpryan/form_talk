@@ -17,6 +17,7 @@ class EditClimbPage extends StatefulWidget {
 }
 
 class _EditClimbPageState extends State<EditClimbPage> {
+  final _formKey = GlobalKey<FormState>();
   Climb _draft;
 
   void initState() {
@@ -34,12 +35,17 @@ class _EditClimbPageState extends State<EditClimbPage> {
           FlatButton(
             child: Text('Done'),
             onPressed: () {
+              var valid = _formKey.currentState.validate();
+              if (!valid) {
+                return;
+              }
               Navigator.of(context).pop(_draft);
             },
           ),
         ],
       ),
       body: Form(
+        key: _formKey,
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -52,6 +58,12 @@ class _EditClimbPageState extends State<EditClimbPage> {
                     hintText: 'Name of the climb...',
                     filled: true,
                   ),
+                  validator: (s) {
+                    if (s.isEmpty) {
+                      return 'Please enter a name';
+                    }
+                    return null;
+                  },
                   initialValue: _draft.name,
                   onChanged: (newValue) {
                     _draft.name = newValue;
@@ -62,6 +74,12 @@ class _EditClimbPageState extends State<EditClimbPage> {
                 ),
                 DateFormField(
                   initialValue: _draft.date,
+                  validator: (dateTime) {
+                    if (dateTime.isAfter(DateTime.now())) {
+                      return 'Please select a date in the past.';
+                    }
+                    return null;
+                  },
                   onChanged: (newDate) {
                     _draft.date = newDate;
                   },
