@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/climb.dart';
+import '../models/grade.dart';
 import '../widgets/date_form_field.dart';
 
 class EditClimbPage extends StatefulWidget {
@@ -64,6 +65,48 @@ class _EditClimbPageState extends State<EditClimbPage> {
                   onChanged: (newDate) {
                     _draft.date = newDate;
                   },
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                DropdownButtonFormField<GradeType>(
+                  value: _draft.grade.type,
+                  decoration: InputDecoration(filled: true),
+                  onChanged: (gradeType) {
+                    setState(() {
+                      _draft.grade = _draft.grade.toType(gradeType);
+                    });
+                  },
+                  items: [
+                    ...GradeType.values.map(
+                      (type) => DropdownMenuItem<GradeType>(
+                        value: type,
+                        child: Text(describeEnum(type)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 24,
+                ),
+                DropdownButtonFormField<String>(
+                  value: _draft.grade.toHumanReadableString(),
+                  decoration: InputDecoration(filled: true),
+                  onChanged: (gradeString) {
+                    if (_draft.grade.type == GradeType.FR) {
+                      _draft.grade = Grade.fr(gradeString);
+                    } else {
+                      _draft.grade = Grade.yds(gradeString);
+                    }
+                  },
+                  items: [
+                    ...Grade.listGrades(_draft.grade.type).map(
+                      (gradeString) => DropdownMenuItem<String>(
+                        value: gradeString,
+                        child: Text(gradeString),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
